@@ -4,9 +4,9 @@ This [ember-css-modules](https://github.com/salsify/ember-css-modules) plugin ad
 
 ## Usage
 
-This plugin is valuable when paired with another like [ember-css-modules-stylelint](https://github.com/dfreeman/ember-css-modules-stylelint), Together, they can provide a developer experience similar to that of e.g. ember-cli-eslint, providing warnings on rebuild and generating lint tests to flag failures.
+This plugin is valuable when paired with another like [ember-css-modules-stylelint](https://github.com/dfreeman/ember-css-modules-stylelint). Together, they can provide a developer experience similar to that of e.g. ember-cli-eslint, providing warnings on rebuild and generating lint tests to flag failures.
 
-<img src="https://user-images.githubusercontent.com/108688/27017203-b6ef4420-4ef4-11e7-88c8-34101713ab6d.png" width="371">
+<img src="https://user-images.githubusercontent.com/108688/27017203-b6ef4420-4ef4-11e7-88c8-34101713ab6d.png" width="490">
 
 ## Configuration
 
