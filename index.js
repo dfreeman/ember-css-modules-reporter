@@ -12,7 +12,7 @@ module.exports = {
   createCssModulesPlugin(parent) {
     // This may not play nicely with engines that have isDevelopingAddon: true
     // https://github.com/ember-engines/ember-engines/issues/405
-    return this.reporterPlugin = new ReporterPlugin(parent);
+    return this.reporterPlugin = new ReporterPlugin(parent, this.app);
   },
 
   lintTree(type) {
@@ -29,8 +29,9 @@ module.exports = {
 };
 
 class ReporterPlugin extends Plugin {
-  constructor(parent) {
+  constructor(parent, app) {
     super(parent);
+    this.app = app;
     this.isEnabled = false;
     this.generateTests = true;
     this.logMessages = true;
@@ -71,7 +72,7 @@ class ReporterPlugin extends Plugin {
 
   _shouldBeEnabled() {
     if (this.isForApp()) {
-      return !!this.parent.hinting;
+      return !!this.app.hinting;
     } else {
       return this.parent.isDevelopingAddon() && this.parent.hintingEnabled();
     }
