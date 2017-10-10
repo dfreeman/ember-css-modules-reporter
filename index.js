@@ -13,7 +13,7 @@ module.exports = {
   name: 'ember-css-modules-reporter',
 
   createCssModulesPlugin(parent) {
-    let reporterPlugin = new ReporterPlugin(parent);
+    let reporterPlugin = new ReporterPlugin(parent, this.app);
     let isAddonInstance = !!parent.app;
     if (isAddonInstance) {
       engineReporterInstances[parent.options.name] = reporterPlugin;
@@ -40,8 +40,9 @@ module.exports = {
 };
 
 class ReporterPlugin extends Plugin {
-  constructor(parent) {
+  constructor(parent, app) {
     super(parent);
+    this.app = app;
     this.isEnabled = false;
     this.generateTests = true;
     this.logMessages = true;
@@ -82,7 +83,7 @@ class ReporterPlugin extends Plugin {
 
   _shouldBeEnabled() {
     if (this.isForApp()) {
-      return !!this.parent.hinting;
+      return !!this.app.hinting;
     } else {
       return this.parent.isDevelopingAddon() && this.parent.hintingEnabled();
     }
