@@ -1,3 +1,7 @@
 .foo {
   color: #000;
+  border-radius: 100% 0 0 0;
+}
+
+.bar {
 }
