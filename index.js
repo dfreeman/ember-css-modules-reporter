@@ -6,17 +6,28 @@ const postcss = require('postcss');
 const LintTests = require('./lib/lint-tests');
 const formatter = require('./lib/formatter');
 
+// this is a hack for using the right instance in engines
+let engineReporterInstances = {};
+
 module.exports = {
   name: 'ember-css-modules-reporter',
 
   createCssModulesPlugin(parent) {
-    // This may not play nicely with engines that have isDevelopingAddon: true
-    // https://github.com/ember-engines/ember-engines/issues/405
-    return this.reporterPlugin = new ReporterPlugin(parent, this.app);
+    let reporterPlugin = new ReporterPlugin(parent, this.app);
+    let isAddonInstance = !!parent.app;
+    if (isAddonInstance) {
+      engineReporterInstances[parent.options.name] = reporterPlugin;
+    }
+    return this.reporterPlugin = reporterPlugin;
   },
 
-  lintTree(type) {
-    let plugin = this.reporterPlugin;
+  lintTree(type, tree) {
+    let plugin;
+    if (tree.annotation === 'Funnel: Addon JS' && engineReporterInstances[tree.destDir]) {
+      plugin = engineReporterInstances[tree.destDir];
+    } else {
+      plugin = this.reporterPlugin;
+    }
     if (!plugin.generateTests) { return; }
     if ((plugin.isForApp() && type === 'app') || (plugin.isForAddon() && type === 'addon')) {
       return new LintTests({
