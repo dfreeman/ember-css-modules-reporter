@@ -2,40 +2,42 @@
 'use strict';
 
 const Plugin = require('ember-css-modules/lib/plugin');
+const MergeTrees = require('broccoli-merge-trees');
 const postcss = require('postcss');
 const LintTests = require('./lib/lint-tests');
 const formatter = require('./lib/formatter');
-
-// this is a hack for using the right instance in engines
-let engineReporterInstances = {};
 
 module.exports = {
   name: 'ember-css-modules-reporter',
 
   createCssModulesPlugin(parent) {
-    let reporterPlugin = new ReporterPlugin(parent, this.app);
-    let isAddonInstance = !!parent.app;
-    if (isAddonInstance) {
-      engineReporterInstances[parent.options.name] = reporterPlugin;
-    }
-    return this.reporterPlugin = reporterPlugin;
+    let plugin = new ReporterPlugin(parent, this.app);
+    this._getPluginInstances().push(plugin);
+    return plugin;
   },
 
-  lintTree(type, tree) {
-    let plugin;
-    if (tree.annotation === 'Funnel: Addon JS' && engineReporterInstances[tree.destDir]) {
-      plugin = engineReporterInstances[tree.destDir];
-    } else {
-      plugin = this.reporterPlugin;
-    }
-    if (!plugin.generateTests) { return; }
-    if ((plugin.isForApp() && type === 'app') || (plugin.isForAddon() && type === 'addon')) {
-      return new LintTests({
-        type: type,
+  lintTree(type) {
+    // This is a little fragile, we need to pick some tree type to return lint tests for,
+    // and lintTree('tests') runs after all the app and addon styles have been processed
+    if (type !== 'tests') { return; }
+
+    let trees = this._getPluginInstances()
+      .filter((plugin) => plugin.generateTests)
+      .map((plugin, index) => new LintTests({
+        index,
         reporterPlugin: plugin,
         project: this.project
-      });
+      }));
+
+    return new MergeTrees(trees);
+  },
+
+  _getPluginInstances() {
+    if (!this.project._cssModulesReporters) {
+      this.project._cssModulesReporters = [];
     }
+
+    return this.project._cssModulesReporters;
   }
 };
 
