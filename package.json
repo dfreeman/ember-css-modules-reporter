@@ -4,7 +4,8 @@
   "description": "An ember-css-modules plugin that logs and generates lint tests for PostCSS plugin warnings and errors",
   "keywords": [
     "ember-addon",
-    "ember-css-modules-plugin"
+    "ember-css-modules-plugin",
+    "ember-css-modules-lint-plugin"
   ],
   "license": "MIT",
   "author": "Dan Freeman",
@@ -20,6 +21,7 @@
     "test-node": "qunit tests-node/**/*-test.js"
   },
   "dependencies": {
+    "broccoli-merge-trees": "^2.0.0",
     "chalk": "^1.1.3",
     "postcss": "^6.0.1"
   },

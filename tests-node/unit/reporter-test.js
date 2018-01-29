@@ -10,7 +10,7 @@ testModule('Unit | reporter');
 
 test('message collection', function(assert) {
   let parent = { hinting: true };
-  let addon = Object.create(addonPrototype, { app: { value: { hinting: true } } });
+  let addon = Object.create(addonPrototype, { app: { value: { hinting: true } }, project: { value: {} } });
   let plugin = addon.createCssModulesPlugin(parent);
   let config = {};
 
@@ -28,7 +28,7 @@ test('message collection', function(assert) {
 
 test('message logging', function(assert) {
   let parent = { hinting: true, ui: { writeLine: sinon.spy() } };
-  let addon = Object.create(addonPrototype, { app: { value: { hinting: true } } });
+  let addon = Object.create(addonPrototype, { app: { value: { hinting: true } }, project: { value: {} } });
   let plugin = addon.createCssModulesPlugin(parent);
 
   plugin.config('development', {});
